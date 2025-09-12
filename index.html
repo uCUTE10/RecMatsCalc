@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RECMATS Calculators</title>
+  <link rel="icon" type="image/png" href="mats.png">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      background: #121212; 
+      color: #f1f1f1; 
+      display: flex; 
+      justify-content: center; 
+      align-items: flex-start; 
+      height: 100vh; 
+      margin: 0; 
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .box { 
+      background: #1e1e1e; 
+      padding: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.6); 
+      text-align: center;
+    }
+    h2 { color: #90ee90; margin-bottom: 15px; }
+    input { 
+  width: 200px;           /* fixed width instead of 100% */
+  margin: 5px auto;       /* centers the bar horizontally */
+  display: block;         /* ensures margin auto works */
+  padding: 10px; 
+  border-radius: 5px; 
+  border: 1px solid #333; 
+  background: #2a2a2a; 
+  color: #fff; 
+  font-size: 18px; 
+  text-align: center; 
+}
+    .keypad { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      gap: 8px; 
+      margin-top: 10px; 
+    }
+    button { 
+      padding: 12px; 
+      border: none; 
+      background: #333; 
+      color: white; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px; 
+      font-weight: bold; 
+    }
+    button:hover { background: #555; }
+    .equal { background: #4CAF50; }
+    .equal:hover { background: #45a049; }
+    .clear { background: #e74c3c; }
+    .clear:hover { background: #c0392b; }
+    .back { background: #f39c12; }
+    .back:hover { background: #d68910; }
+    .calc-btn { 
+      margin-top: 10px; 
+      padding: 12px 20px; 
+      background: #4CAF50; 
+      border-radius: 5px; 
+      font-size: 16px; 
+      font-weight: bold; 
+    }
+    .calc-btn:hover { background: #45a049; }
+    h3 { white-space: pre-line; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Calculator 1 -->
+    <div class="box">
+      <h2>Maintenance Mats Calculator<br>(Sets ➝ Materials)</h2>
+      <label>Number of Sets (1 set = 5 parts):</label>
+      <input type="text" id="setsNeeded" value="">
+      <div class="keypad">
+        <button onclick="appendNum(7)">7</button>
+        <button onclick="appendNum(8)">8</button>
+        <button onclick="appendNum(9)">9</button>
+        <button class="back" onclick="backspace()">⌫</button>
+        
+        <button onclick="appendNum(4)">4</button>
+        <button onclick="appendNum(5)">5</button>
+        <button onclick="appendNum(6)">6</button>
+        <button class="clear" onclick="clearInput()">C</button>
+        
+        <button onclick="appendNum(1)">1</button>
+        <button onclick="appendNum(2)">2</button>
+        <button onclick="appendNum(3)">3</button>
+        <button class="equal" onclick="calcMaterials()">=</button>
+        
+        <button style="grid-column: span 2;" onclick="appendNum(0)">0</button>
+      </div>
+      <h3 id="result1">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
+    </div>
+
+    <!-- Calculator 2 -->
+    <div class="box">
+      <h2>Vehicle Parts<br>(Materials ➝ Parts)</h2>
+      <label>Plastic:</label>
+      <input type="number" id="plasticInput" placeholder="Enter Plastic">
+      <label>Glass:</label>
+      <input type="number" id="glassInput" placeholder="Enter Glass">
+      <label>Rubber:</label>
+      <input type="number" id="rubberInput" placeholder="Enter Rubber">
+      <button class="calc-btn" onclick="calcParts()">Calculate</button>
+      <h3 id="result2">You can make: 0 Parts</h3>
+      <h3 id="remainder2"></h3>
+    </div>
+
+    <!-- Calculator 3 -->
+    <div class="box">
+      <h2>vehicle Parts<br>(Parts ➝ Materials)</h2>
+      <label>Number of Vehicle Parts:</label>
+      <input type="number" id="partsInput" placeholder="Enter Parts">
+      <button class="calc-btn" onclick="calcMatsFromParts()">Calculate</button>
+      <h3 id="result3">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
+    </div>
+  </div>
+
+  <script>
+  // Requirements per set (5 parts)
+  const reqPlasticSet = 150; // 30 * 5
+  const reqGlassSet = 75;    // 15 * 5
+  const reqRubberSet = 250;  // 50 * 5
+
+  // Requirements per part
+  const reqPlasticPart = 10;
+  const reqGlassPart = 5;
+  const reqRubberPart = 15;
+
+  // Calculator 1
+  function appendNum(num) {
+    document.getElementById("setsNeeded").value += num;
+  }
+  function backspace() {
+    let input = document.getElementById("setsNeeded");
+    input.value = input.value.slice(0, -1);
+  }
+  function clearInput() {
+    document.getElementById("setsNeeded").value = "";
+    document.getElementById("result1").innerText = "Needs: 0 Plastic, 0 Glass, 0 Rubber";
+  }
+  function calcMaterials() {
+    let setsNeeded = parseInt(document.getElementById("setsNeeded").value);
+    if (isNaN(setsNeeded) || setsNeeded < 1) {
+      document.getElementById("result1").innerText = "Please enter a valid number of sets.";
+      return;
+    }
+    let plasticNeeded = setsNeeded * reqPlasticSet;
+    let glassNeeded = setsNeeded * reqGlassSet;
+    let rubberNeeded = setsNeeded * reqRubberSet;
+    let totalParts = setsNeeded * 5;
+    document.getElementById("result1").innerText =
+      setsNeeded + " FSM = " + totalParts + " Parts\n" +
+      "Plastic: -" + plasticNeeded + "\n" +
+      "Glass: -" + glassNeeded + "\n" +
+      "Rubber: -" + rubberNeeded;
+  }
+
+  // Calculator 2
+  function calcParts() {
+    let plastic = parseInt(document.getElementById("plasticInput").value) || 0;
+    let glass = parseInt(document.getElementById("glassInput").value) || 0;
+    let rubber = parseInt(document.getElementById("rubberInput").value) || 0;
+
+    let partsByPlastic = Math.floor(plastic / reqPlasticPart);
+    let partsByGlass = Math.floor(glass / reqGlassPart);
+    let partsByRubber = Math.floor(rubber / reqRubberPart);
+
+    let partsPossible = Math.min(partsByPlastic, partsByGlass, partsByRubber);
+
+    let leftoverPlastic = plastic - (partsPossible * reqPlasticPart);
+    let leftoverGlass = glass - (partsPossible * reqGlassPart);
+    let leftoverRubber = rubber - (partsPossible * reqRubberPart);
+
+    document.getElementById("result2").innerText =
+      "You can make: " + partsPossible + " Parts\n" +
+      "Plastic Leftover: " + leftoverPlastic + "\n" +
+      "Glass Leftover: " + leftoverGlass + "\n" +
+      "Rubber Leftover: " + leftoverRubber;
+  }
+
+  // Calculator 3
+  function calcMatsFromParts() {
+    let parts = parseInt(document.getElementById("partsInput").value);
+    if (isNaN(parts) || parts < 1) {
+      document.getElementById("result3").innerText = "Please enter a valid number of parts.";
+      return;
+    }
+    let plasticNeeded = parts * reqPlasticPart;
+    let glassNeeded = parts * reqGlassPart;
+    let rubberNeeded = parts * reqRubberPart;
+    document.getElementById("result3").innerText =
+      "Parts: " + parts + "\n" +
+      "Plastic Needed: " + plasticNeeded + "\n" +
+      "Glass Needed: " + glassNeeded + "\n" +
+      "Rubber Needed: " + rubberNeeded;
+  }
+
+  // Enable Enter key for Calculator 1
+  document.getElementById("setsNeeded").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") calcMaterials();
+  });
+
+  
+</script>
+<div style="position:fixed; bottom:0; left:0; width:100%; text-align:center; 
+            font-size:20px; color:#888; background:#111; padding:5px 0;">
+  Credits: <b>PauTangFM</b>
+</div>
+</body>
+</html>
