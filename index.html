@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>RECMATS Calculators</title>
+  <title>OTTO'S CALCULATOR</title>
   <link rel="icon" type="image/png" href="mats.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -38,6 +38,17 @@
       color: #90ee90; 
       margin-bottom: 15px; 
       font-size: 1.3rem; 
+    }
+    /* section title spans full grid width */
+    h1.section-title {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: #222;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #ffd700;
+      font-size: 1.25rem;
+      margin: 0;
     }
     label {
       display: block;
@@ -122,6 +133,9 @@
 </head>
 <body>
   <div class="container">
+    <!-- Section Title: RECMATS -->
+    <h1 class="section-title">RECMATS CALCULATOR</h1>
+
     <!-- (Calculator 1 - kept simple for brevity) -->
     <div class="box">
       <h2>Maintenance Mats Calculator<br>(Sets ➝ Materials)</h2>
@@ -171,37 +185,9 @@
       <h3 id="result3">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
     </div>
 
-    <!-- Calculator 4 (Basic) -->
-    <div class="box">
-      <h2>Basic Calculator</h2>
-      <input type="text" id="basicDisplay" disabled>
-      <div class="keypad">
-        <button onclick="basicClear()" class="clear">C</button>
-        <button onclick="basicBack()" class="back">⌫</button>
-        <button onclick="basicAppend('%')">%</button>
-        <button onclick="basicAppend('/')">÷</button>
-
-        <button onclick="basicAppend('7')">7</button>
-        <button onclick="basicAppend('8')">8</button>
-        <button onclick="basicAppend('9')">9</button>
-        <button onclick="basicAppend('*')">×</button>
-
-        <button onclick="basicAppend('4')">4</button>
-        <button onclick="basicAppend('5')">5</button>
-        <button onclick="basicAppend('6')">6</button>
-        <button onclick="basicAppend('-')">−</button>
-
-        <button onclick="basicAppend('1')">1</button>
-        <button onclick="basicAppend('2')">2</button>
-        <button onclick="basicAppend('3')">3</button>
-        <button onclick="basicAppend('+')">+</button>
-
-        <button style="grid-column: span 2;" onclick="basicAppend('0')">0</button>
-        <button onclick="basicAppend('.')">.</button>
-        <button class="equal" onclick="basicCalculate()">=</button>
-      </div>
-    </div>
-
+    <!-- Section Title: COSMETICS -->
+    <h1 class="section-title">COSMETICS & UPGRADES</h1>
+    
     <!-- Calculator 5: Cosmetics -->
     <div class="box">
       <h2>COSMETICS CALCULATOR</h2>
@@ -214,7 +200,7 @@
       <label>Plate Number (1000 each):</label>
       <input type="number" id="plateInput" placeholder="Enter number of Plate Numbers">
       <label>Custom Value:</label>
-      <input type="number" id="customInput" placeholder="Enter any value">
+      <input type="number" id="customInput" placeholder="Enter any value (decimals allowed)">
       <button class="calc-btn" onclick="calcCosmetics()">Calculate</button>
       <pre id="result5">Total: 0</pre>
       <button class="clear" onclick="resetCosmetics()">Reset</button>
@@ -292,9 +278,41 @@
 Upgrades:
   None
 -----------------
-Grand Total: 0</pre>
+Grand Total: 0.00</pre>
       <button class="calc-btn" onclick="applyLabor()">Apply Labor (×1.5)</button>
       <button class="clear" onclick="resetGrand()">Reset Grand Total</button>
+    </div>
+
+    <h1 class="section-title">BASIC CALCULATOR</h1>
+    <!-- Calculator 4 (Basic) -->
+    <div class="box">
+      <h2>Basic Calculator</h2>
+      <input type="text" id="basicDisplay" disabled>
+      <div class="keypad">
+        <button onclick="basicClear()" class="clear">C</button>
+        <button onclick="basicBack()" class="back">⌫</button>
+        <button onclick="basicAppend('%')">%</button>
+        <button onclick="basicAppend('/')">÷</button>
+
+        <button onclick="basicAppend('7')">7</button>
+        <button onclick="basicAppend('8')">8</button>
+        <button onclick="basicAppend('9')">9</button>
+        <button onclick="basicAppend('*')">×</button>
+
+        <button onclick="basicAppend('4')">4</button>
+        <button onclick="basicAppend('5')">5</button>
+        <button onclick="basicAppend('6')">6</button>
+        <button onclick="basicAppend('-')">−</button>
+
+        <button onclick="basicAppend('1')">1</button>
+        <button onclick="basicAppend('2')">2</button>
+        <button onclick="basicAppend('3')">3</button>
+        <button onclick="basicAppend('+')">+</button>
+
+        <button style="grid-column: span 2;" onclick="basicAppend('0')">0</button>
+        <button onclick="basicAppend('.')">.</button>
+        <button class="equal" onclick="basicCalculate()">=</button>
+      </div>
     </div>
   </div>
 
@@ -306,6 +324,13 @@ Grand Total: 0</pre>
   const reqPlasticPart = 10;
   const reqGlassPart = 5;
   const reqRubberPart = 15;
+
+  // formatNumber: TRUNCATE to 2 decimals and always show 2 digits
+  function formatNumber(num) {
+    if (!isFinite(num)) return "0.00";
+    // truncate (cut off extra decimals) then format with 2 decimals
+    return (Math.floor(Number(num) * 100) / 100).toFixed(2);
+  }
 
   // ===== calc1 keypad helpers =====
   function appendNum(num) {
@@ -424,21 +449,24 @@ Grand Total: 0</pre>
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
-    const customValue = parseInt(document.getElementById("customInput").value) || 0;
+    // IMPORTANT: parseFloat for custom so decimals are preserved
+    const customValue = parseFloat(document.getElementById("customInput").value) || 0;
 
     const cosmeTotal = cosmeCount * 400;
     const resprayTotal = resprayCount * 1000;
     const neonTotal = neonCount * 600;
     const plateTotal = plateCount * 1000;
 
+    // cosmeticsTotal can now be a float if customValue has decimals
     cosmeticsTotal = cosmeTotal + resprayTotal + neonTotal + plateTotal + customValue;
 
+    // show raw values for breakdown (custom shows full input)
     document.getElementById("result5").innerText =
       "Cosme: " + cosmeCount + " = " + cosmeTotal + "\n" +
       "Respray: " + resprayCount + " = " + resprayTotal + "\n" +
       "Neon: " + neonCount + " = " + neonTotal + "\n" +
       "Plate: " + plateCount + " = " + plateTotal + "\n" +
-      "Custom: " + customValue + "\n" +
+      "Custom: " + (customValue !== 0 ? customValue : 0) + "\n" +
       "-----------------\n" +
       "Total: " + cosmeticsTotal;
 
@@ -458,17 +486,17 @@ Grand Total: 0</pre>
 
   function calcUpgrade() {
     // cost values (from select value) and level numbers (select index)
-    const engineCost = parseInt(document.getElementById("engineLevel").value) || 0;
+    const engineCost = Number(document.getElementById("engineLevel").value) || 0;
     const engineLevelNum = document.getElementById("engineLevel").selectedIndex; // 0 = None, 1 = Level1 ...
-    const brakeCost = parseInt(document.getElementById("brakeLevel").value) || 0;
+    const brakeCost = Number(document.getElementById("brakeLevel").value) || 0;
     const brakeLevelNum = document.getElementById("brakeLevel").selectedIndex;
-    const transmissionCost = parseInt(document.getElementById("transmissionLevel").value) || 0;
+    const transmissionCost = Number(document.getElementById("transmissionLevel").value) || 0;
     const transmissionLevelNum = document.getElementById("transmissionLevel").selectedIndex;
-    const suspensionCost = parseInt(document.getElementById("suspensionLevel").value) || 0;
+    const suspensionCost = Number(document.getElementById("suspensionLevel").value) || 0;
     const suspensionLevelNum = document.getElementById("suspensionLevel").selectedIndex;
-    const armourCost = parseInt(document.getElementById("armourLevel").value) || 0;
+    const armourCost = Number(document.getElementById("armourLevel").value) || 0;
     const armourLevelNum = document.getElementById("armourLevel").selectedIndex;
-    const turboCost = parseInt(document.getElementById("turboLevel").value) || 0;
+    const turboCost = Number(document.getElementById("turboLevel").value) || 0;
     const turboSelected = document.getElementById("turboLevel").selectedIndex > 0;
 
     upgradesTotal = engineCost + brakeCost + transmissionCost + suspensionCost + armourCost + turboCost;
@@ -507,7 +535,7 @@ Grand Total: 0</pre>
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
-    const customValue = parseInt(document.getElementById("customInput").value) || 0;
+    const customValue = parseFloat(document.getElementById("customInput").value) || 0;
 
     const cosmeticsList = [];
     if (cosmeCount > 0) cosmeticsList.push("Cosme ×" + cosmeCount);
@@ -539,21 +567,21 @@ Grand Total: 0</pre>
       "Upgrades:\n" +
       (upgradesList.length ? upgradesList.map(u => "  - " + u).join("\n") : "  None") + "\n" +
       "-----------------\n" +
-      "Grand Total: " + grand.toLocaleString();
+      "Grand Total: " + formatNumber(grand);
 
     document.getElementById("grandResult").innerText = text;
   }
 
   function applyLabor() {
     const grand = cosmeticsTotal + upgradesTotal;
-    const withLabor = Math.floor(grand * 1.5);
+    const withLabor = grand * 1.5;
 
     // produce the same lists as updateGrandTotal() for clarity
     const cosmeCount = parseInt(document.getElementById("cosmeInput").value) || 0;
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
-    const customValue = parseInt(document.getElementById("customInput").value) || 0;
+    const customValue = parseFloat(document.getElementById("customInput").value) || 0;
     const cosmeticsList = [];
     if (cosmeCount > 0) cosmeticsList.push("Cosme ×" + cosmeCount);
     if (resprayCount > 0) cosmeticsList.push("Respray ×" + resprayCount);
@@ -581,8 +609,8 @@ Grand Total: 0</pre>
       "Upgrades:\n" +
       (upgradesList.length ? upgradesList.map(u => "  - " + u).join("\n") : "  None") + "\n" +
       "-----------------\n" +
-      "Total: " + grand.toLocaleString() + "\n" +
-      "Grand Total w/ labor fee: " + withLabor.toLocaleString();
+      "Total: " + formatNumber(grand) + "\n" +
+      "Grand Total w/ labor fee: " + formatNumber(withLabor);
 
     document.getElementById("grandResult").innerText = text;
   }
@@ -594,8 +622,9 @@ Grand Total: 0</pre>
       "Cosmetics:\n  None\n" +
       "Upgrades:\n  None\n" +
       "-----------------\n" +
-      "Grand Total: 0";
+      "Grand Total: 0.00";
   }
+
 // ██████╗  █████╗ ██   ██ ████████╗ █████╗ ███╗   ██╗ ██████╗ 
 // ██╔══██╗██╔══██╗██   ██ ╚══██╔══╝██╔══██╗████╗  ██║██╔═════╗
 // ██████╔╝███████║██   ██    ██║   ███████║██╔██╗ ██║██╚ ████║
