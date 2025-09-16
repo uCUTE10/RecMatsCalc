@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OTTO'S CALCULATOR</title>
+  <title>OTTO'S Calculators</title>
   <link rel="icon" type="image/png" href="mats.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -39,158 +39,113 @@
       margin-bottom: 15px; 
       font-size: 1.3rem; 
     }
-    /* section title spans full grid width */
+
+    /* Section titles */
     h1.section-title {
       grid-column: 1 / -1;
       text-align: center;
       background: #222;
       padding: 10px 12px;
       border-radius: 8px;
-      color: #ffd700;
+      color: #e04a4a;
       font-size: 1.25rem;
       margin: 0;
+      cursor: pointer;
     }
-    label {
-      display: block;
-      margin: 8px 0 4px;
-      font-weight: bold;
-      font-size: 1rem;
+    .section-content {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: max-height 0.6s ease, opacity 0.6s ease, transform 0.6s ease;
     }
+    .section-content.show {
+      max-height: 3000px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    label { display: block; margin: 8px 0 4px; font-weight: bold; font-size: 1rem; }
     input, select { 
-      width: 100%;
-      max-width: 220px; 
-      margin: 6px auto; 
-      display: block; 
-      padding: 10px; 
-      border-radius: 6px; 
-      border: 1px solid #333; 
-      background: #2a2a2a; 
-      color: #fff; 
-      font-size: 18px; 
-      text-align: center; 
+      width: 100%; max-width: 220px; margin: 6px auto; display: block; 
+      padding: 10px; border-radius: 6px; border: 1px solid #333; 
+      background: #2a2a2a; color: #fff; font-size: 18px; text-align: center;
     }
-    .keypad { 
-      display: grid; 
-      grid-template-columns: repeat(4, 1fr); 
-      gap: 10px; 
-      margin-top: 12px; 
-    }
-    button { 
-      padding: 12px; 
-      border: none; 
-      background: #333; 
-      color: white; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      font-size: 16px; 
-      font-weight: bold; 
-      transition: background 0.2s;
-    }
+    .keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+    button { padding: 12px; border: none; background: #333; color: white; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.2s; }
     button:hover { background: #555; }
-    .equal { background: #4CAF50; }
-    .equal:hover { background: #45a049; }
-    .clear { background: #e74c3c; }
-    .clear:hover { background: #c0392b; }
-    .back { background: #f39c12; }
-    .back:hover { background: #d68910; }
-    .calc-btn { 
-      margin-top: 12px; 
-      padding: 12px 20px; 
-      background: #4CAF50; 
-      border-radius: 6px; 
-      font-size: 16px; 
-      font-weight: bold; 
-    }
+    .equal { background: #4CAF50; } .equal:hover { background: #45a049; }
+    .clear { background: #e74c3c; } .clear:hover { background: #c0392b; }
+    .back { background: #f39c12; } .back:hover { background: #d68910; }
+    .calc-btn { margin-top: 12px; padding: 12px 20px; background: #4CAF50; border-radius: 6px; font-size: 16px; font-weight: bold; }
     .calc-btn:hover { background: #45a049; }
-    h3, pre { 
-      white-space: pre-line; 
-      margin-top: 15px; 
-      background: #222;
-      padding: 12px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 1rem;
-      line-height: 1.4em;
-      text-align: left;
-    }
+    h3, pre { white-space: pre-line; margin-top: 15px; background: #222; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 1rem; line-height: 1.4em; text-align: left; }
+
     @media (max-width: 800px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
+      .container { grid-template-columns: 1fr; }
     }
     .footer {
-      position: fixed; 
-      bottom: 0; 
-      left: 0; 
-      width: 100%; 
-      text-align: center; 
-      font-size: 16px; 
-      color: #aaa; 
-      background: #111; 
-      padding: 6px 0;
+      position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; 
+      font-size: 16px; color: #aaa; background: #11111100; padding: 6px 0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Section Title: RECMATS -->
+    <!-- Section: RECMATS -->
     <h1 class="section-title">RECMATS CALCULATOR</h1>
-
-    <!-- (Calculator 1 - kept simple for brevity) -->
-    <div class="box">
-      <h2>Maintenance Mats Calculator<br>(Sets ➝ Materials)</h2>
-      <label>Number of Sets (1 set = 5 parts):</label>
-      <input type="text" id="setsNeeded" value="">
-      <div class="keypad">
-        <button onclick="appendNum(7)">7</button>
-        <button onclick="appendNum(8)">8</button>
-        <button onclick="appendNum(9)">9</button>
-        <button class="back" onclick="backspace()">⌫</button>
-        
-        <button onclick="appendNum(4)">4</button>
-        <button onclick="appendNum(5)">5</button>
-        <button onclick="appendNum(6)">6</button>
-        <button class="clear" onclick="clearInput()">C</button>
-        
-        <button onclick="appendNum(1)">1</button>
-        <button onclick="appendNum(2)">2</button>
-        <button onclick="appendNum(3)">3</button>
-        <button class="equal" onclick="calcMaterials()">=</button>
-        
-        <button style="grid-column: span 2;" onclick="appendNum(0)">0</button>
+    <div class="section-content">
+      <!-- Calculator 1 -->
+      <div class="box">
+        <h2>Maintenance Mats Calculator<br>(Sets ➝ Materials)</h2>
+        <label>Number of Sets (1 set = 5 parts):</label>
+        <input type="text" id="setsNeeded" value="">
+        <div class="keypad">
+          <button onclick="appendNum(7)">7</button>
+          <button onclick="appendNum(8)">8</button>
+          <button onclick="appendNum(9)">9</button>
+          <button class="back" onclick="backspace()">⌫</button>
+          <button onclick="appendNum(4)">4</button>
+          <button onclick="appendNum(5)">5</button>
+          <button onclick="appendNum(6)">6</button>
+          <button class="clear" onclick="clearInput()">C</button>
+          <button onclick="appendNum(1)">1</button>
+          <button onclick="appendNum(2)">2</button>
+          <button onclick="appendNum(3)">3</button>
+          <button class="equal" onclick="calcMaterials()">=</button>
+          <button style="grid-column: span 2;" onclick="appendNum(0)">0</button>
+        </div>
+        <h3 id="result1">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
       </div>
-      <h3 id="result1">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
+      <!-- Calculator 2 -->
+      <div class="box">
+        <h2>Vehicle Parts<br>(Materials ➝ Parts)</h2>
+        <label>Plastic:</label><input type="number" id="plasticInput">
+        <label>Glass:</label><input type="number" id="glassInput">
+        <label>Rubber:</label><input type="number" id="rubberInput">
+        <button class="calc-btn" onclick="calcParts()">Calculate</button>
+        <h3 id="result2">You can make: 0 Parts</h3>
+        <h3 id="remainder2"></h3>
+      </div>
+      <!-- Calculator 3 -->
+      <div class="box">
+        <h2>Vehicle Parts<br>(Parts ➝ Materials)</h2>
+        <label>Number of Vehicle Parts:</label>
+        <input type="number" id="partsInput">
+        <button class="calc-btn" onclick="calcMatsFromParts()">Calculate</button>
+        <h3 id="result3">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
+      </div>
     </div>
 
-    <!-- Calculator 2 (Materials ➝ Parts) -->
-    <div class="box">
-      <h2>Vehicle Parts<br>(Materials ➝ Parts)</h2>
-      <label>Plastic:</label>
-      <input type="number" id="plasticInput" placeholder="Enter Plastic">
-      <label>Glass:</label>
-      <input type="number" id="glassInput" placeholder="Enter Glass">
-      <label>Rubber:</label>
-      <input type="number" id="rubberInput" placeholder="Enter Rubber">
-      <button class="calc-btn" onclick="calcParts()">Calculate</button>
-      <h3 id="result2">You can make: 0 Parts</h3>
-      <h3 id="remainder2"></h3>
-    </div>
-
-    <!-- Calculator 3 (Parts ➝ Materials) -->
-    <div class="box">
-      <h2>Vehicle Parts<br>(Parts ➝ Materials)</h2>
-      <label>Number of Vehicle Parts:</label>
-      <input type="number" id="partsInput" placeholder="Enter Parts">
-      <button class="calc-btn" onclick="calcMatsFromParts()">Calculate</button>
-      <h3 id="result3">Needs: 0 Plastic, 0 Glass, 0 Rubber</h3>
-    </div>
-
-    <!-- Section Title: COSMETICS -->
+    <!-- Section: Cosmetics -->
     <h1 class="section-title">COSMETICS & UPGRADES</h1>
-    
-    <!-- Calculator 5: Cosmetics -->
-    <div class="box">
-      <h2>COSMETICS CALCULATOR</h2>
+    <div class="section-content">
+      <!-- Cosmetics -->
+      <div class="box"><h2>COSMETICS CALCULATOR</h2>
       <label>Cosme (400 each):</label>
       <input type="number" id="cosmeInput" placeholder="Enter number of Cosme">
       <label>Respray (1000 each):</label>
@@ -203,12 +158,9 @@
       <input type="number" id="customInput" placeholder="Enter any value (decimals allowed)">
       <button class="calc-btn" onclick="calcCosmetics()">Calculate</button>
       <pre id="result5">Total: 0</pre>
-      <button class="clear" onclick="resetCosmetics()">Reset</button>
-    </div>
-
-    <!-- Calculator 6: Upgrades -->
-    <div class="box">
-      <h2>UPGRADE CALCULATOR</h2>
+      <button class="clear" onclick="resetCosmetics()">Reset</button> </div>
+      <!-- Upgrades -->
+      <div class="box"> <h2>UPGRADE CALCULATOR</h2>
       <label>Engine Upgrade:</label>
       <select id="engineLevel">
         <option value="0">None</option>
@@ -269,10 +221,8 @@
       <pre id="result6">Total: 0</pre>
       <button class="clear" onclick="resetUpgrade()">Reset</button>
     </div>
-
-    <!-- Grand Total -->
-    <div class="box">
-      <h2>GRAND TOTAL</h2>
+      <!-- Grand Total -->
+      <div class="box"><h2>GRAND TOTAL</h2>
       <pre id="grandResult">Cosmetics:
   None
 Upgrades:
@@ -282,42 +232,44 @@ Grand Total: 0.00</pre>
       <button class="calc-btn" onclick="applyLabor()">Apply Labor (×1.5)</button>
       <button class="clear" onclick="resetGrand()">Reset Grand Total</button>
     </div>
+    </div>
 
+    <!-- Section: Basic Calculator -->
     <h1 class="section-title">BASIC CALCULATOR</h1>
-    <!-- Calculator 4 (Basic) -->
-    <div class="box">
-      <h2>Basic Calculator</h2>
-      <input type="text" id="basicDisplay" disabled>
-      <div class="keypad">
-        <button onclick="basicClear()" class="clear">C</button>
-        <button onclick="basicBack()" class="back">⌫</button>
-        <button onclick="basicAppend('%')">%</button>
-        <button onclick="basicAppend('/')">÷</button>
+    <div class="section-content" style="justify-content: center;">
+  <div class="box" style="max-width: 360px; width: 100%;">
+    <h2>Basic Calculator</h2>
+    <input type="text" id="basicDisplay" disabled>
+    <div class="keypad">
+      <button onclick="basicClear()" class="clear">C</button>
+      <button onclick="basicBack()" class="back">⌫</button>
+      <button onclick="basicAppend('%')">%</button>
+      <button onclick="basicAppend('/')">÷</button>
 
-        <button onclick="basicAppend('7')">7</button>
-        <button onclick="basicAppend('8')">8</button>
-        <button onclick="basicAppend('9')">9</button>
-        <button onclick="basicAppend('*')">×</button>
+      <button onclick="basicAppend('7')">7</button>
+      <button onclick="basicAppend('8')">8</button>
+      <button onclick="basicAppend('9')">9</button>
+      <button onclick="basicAppend('*')">×</button>
 
-        <button onclick="basicAppend('4')">4</button>
-        <button onclick="basicAppend('5')">5</button>
-        <button onclick="basicAppend('6')">6</button>
-        <button onclick="basicAppend('-')">−</button>
+      <button onclick="basicAppend('4')">4</button>
+      <button onclick="basicAppend('5')">5</button>
+      <button onclick="basicAppend('6')">6</button>
+      <button onclick="basicAppend('-')">−</button>
 
-        <button onclick="basicAppend('1')">1</button>
-        <button onclick="basicAppend('2')">2</button>
-        <button onclick="basicAppend('3')">3</button>
-        <button onclick="basicAppend('+')">+</button>
+      <button onclick="basicAppend('1')">1</button>
+      <button onclick="basicAppend('2')">2</button>
+      <button onclick="basicAppend('3')">3</button>
+      <button onclick="basicAppend('+')">+</button>
 
-        <button style="grid-column: span 2;" onclick="basicAppend('0')">0</button>
-        <button onclick="basicAppend('.')">.</button>
-        <button class="equal" onclick="basicCalculate()">=</button>
-      </div>
+      <button style="grid-column: span 2;" onclick="basicAppend('0')">0</button>
+      <button onclick="basicAppend('.')">.</button>
+      <button class="equal" onclick="basicCalculate()">=</button>
+    </div>
     </div>
   </div>
 
   <script>
-  // ===== calculator constants (unchanged) =====
+    // ===== calculator constants (unchanged) =====
   const reqPlasticSet = 150; 
   const reqGlassSet = 75;    
   const reqRubberSet = 250;  
@@ -633,6 +585,16 @@ Grand Total: 0.00</pre>
 // ╚═╝     ╚═╝  ╚═╝ ╚════╝    ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
 // initialize grand block on load
   updateGrandTotal();
+
+    // expand/collapse behavior
+    document.querySelectorAll(".section-title").forEach((title) => {
+      title.addEventListener("click", () => {
+        const content = title.nextElementSibling;
+        if (content.classList.contains("section-content")) {
+          content.classList.toggle("show");
+        }
+      });
+    });
   </script>
   <div class="footer">Credits: <b>PauTangFM</b></div>
 </body>
