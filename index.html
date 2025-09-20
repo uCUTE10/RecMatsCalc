@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OTTO'S Calculators</title>
+  <title>OTTOS's Calculators</title>
   <link rel="icon" type="image/png" href="mats.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -150,8 +150,10 @@
       <input type="number" id="cosmeInput" placeholder="Enter number of Cosme">
       <label>Respray (1000 each):</label>
       <input type="number" id="resprayInput" placeholder="Enter number of Respray">
-      <label>Headlight/Neon (600 each):</label>
+      <label>Headlight/Neon (100 each):</label>
       <input type="number" id="neonInput" placeholder="Enter number of Neon">
+      <label>Color of Headlight/Neon (500 each):</label>
+      <input type="number" id="colorInput" placeholder="Enter number of Color">
       <label>Plate Number (1000 each):</label>
       <input type="number" id="plateInput" placeholder="Enter number of Plate Numbers">
       <label>Custom Value:</label>
@@ -400,23 +402,27 @@ Grand Total: 0.00</pre>
     const cosmeCount = parseInt(document.getElementById("cosmeInput").value) || 0;
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
+    const colorCount = parseInt(document.getElementById("colorInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
+    
     // IMPORTANT: parseFloat for custom so decimals are preserved
     const customValue = parseFloat(document.getElementById("customInput").value) || 0;
 
     const cosmeTotal = cosmeCount * 400;
     const resprayTotal = resprayCount * 1000;
-    const neonTotal = neonCount * 600;
+    const neonTotal = neonCount * 500;
+    const colorTotal = colorCount * 100;
     const plateTotal = plateCount * 1000;
 
     // cosmeticsTotal can now be a float if customValue has decimals
-    cosmeticsTotal = cosmeTotal + resprayTotal + neonTotal + plateTotal + customValue;
+    cosmeticsTotal = cosmeTotal + resprayTotal + neonTotal + colorTotal + plateTotal + customValue;
 
     // show raw values for breakdown (custom shows full input)
     document.getElementById("result5").innerText =
       "Cosme: " + cosmeCount + " = " + cosmeTotal + "\n" +
       "Respray: " + resprayCount + " = " + resprayTotal + "\n" +
       "Neon: " + neonCount + " = " + neonTotal + "\n" +
+      "Light color: " + colorCount + " = " + colorTotal + "\n" +
       "Plate: " + plateCount + " = " + plateTotal + "\n" +
       "Custom: " + (customValue !== 0 ? customValue : 0) + "\n" +
       "-----------------\n" +
@@ -429,6 +435,7 @@ Grand Total: 0.00</pre>
     document.getElementById("cosmeInput").value = "";
     document.getElementById("resprayInput").value = "";
     document.getElementById("neonInput").value = "";
+    document.getElementById("colorInput").value = "";
     document.getElementById("plateInput").value = "";
     document.getElementById("customInput").value = "";
     document.getElementById("result5").innerText = "Total: 0";
@@ -486,6 +493,7 @@ Grand Total: 0.00</pre>
     const cosmeCount = parseInt(document.getElementById("cosmeInput").value) || 0;
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
+    const colorCount = parseInt(document.getElementById("colorInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
     const customValue = parseFloat(document.getElementById("customInput").value) || 0;
 
@@ -493,6 +501,7 @@ Grand Total: 0.00</pre>
     if (cosmeCount > 0) cosmeticsList.push("Cosme ×" + cosmeCount);
     if (resprayCount > 0) cosmeticsList.push("Respray ×" + resprayCount);
     if (neonCount > 0) cosmeticsList.push("Neon ×" + neonCount);
+    if (colorCount > 0) cosmeticsList.push("Color ×" + colorCount);
     if (plateCount > 0) cosmeticsList.push("Plate ×" + plateCount);
     if (customValue > 0) cosmeticsList.push("Custom ($" + customValue + ")");
 
@@ -532,12 +541,14 @@ Grand Total: 0.00</pre>
     const cosmeCount = parseInt(document.getElementById("cosmeInput").value) || 0;
     const resprayCount = parseInt(document.getElementById("resprayInput").value) || 0;
     const neonCount = parseInt(document.getElementById("neonInput").value) || 0;
+    const colorCount = parseInt(document.getElementById("colorInput").value) || 0;
     const plateCount = parseInt(document.getElementById("plateInput").value) || 0;
     const customValue = parseFloat(document.getElementById("customInput").value) || 0;
     const cosmeticsList = [];
     if (cosmeCount > 0) cosmeticsList.push("Cosme ×" + cosmeCount);
     if (resprayCount > 0) cosmeticsList.push("Respray ×" + resprayCount);
     if (neonCount > 0) cosmeticsList.push("Neon ×" + neonCount);
+    if (neonCount > 0) cosmeticsList.push("Color ×" + colorCount);
     if (plateCount > 0) cosmeticsList.push("Plate ×" + plateCount);
     if (customValue > 0) cosmeticsList.push("Custom (" + customValue + ")");
 
