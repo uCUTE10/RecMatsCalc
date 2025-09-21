@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OTTOS's Calculators</title>
+  <title>OTTO's Calculators & Logs</title>
   <link rel="icon" type="image/png" href="mats.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -269,7 +269,123 @@ Grand Total: 0.00</pre>
     </div>
     </div>
   </div>
+  <h1 class="section-title">
+  PANG LOGS DAW NI ELI BUY KIJIMA 
+</h1>
+<div class="section-content" style="justify-content: center;">
+  <div class="box" style="max-width: 360px; width: 100%;">
+    <div class="logs-section">
+      <!-- First field changed to checkboxes -->
+<div class="log-field">
+  <label style="display:block; text-align:center; font-weight:bold; margin-bottom:8px;">
+     NAMES OF SERVICE:
+  </label>
+  <div class="service-options">
+    <div class="service-option" onclick="toggleService(this)">CSM</div>
+    <div class="service-option" onclick="toggleService(this)">PMS</div>
+    <div class="service-option" onclick="toggleService(this)">UPS</div>
+  </div>
+</div>
+<button class="info-btn">info</button>
+  <div class="info-popup">
+SERVICE CODES:
 
+PMS: PREVENTIVE MAINTENANCE SERVICES
+CSM: COSMETICS
+UPS: UPGRADES
+  </div>
+
+<div id="infoPopup" class="info-popup">
+</div>
+
+<style>
+.section-title {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: default; /* no click */
+  font-weight: bold;
+  position: relative;
+}
+
+.info-popup {
+  display: none;
+  position: absolute;
+  top: 120px;        /* distance below button */
+  right: 690px;
+  background: #222;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 220px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  white-space: pre-line; /* keep \n line breaks */
+}
+
+/* Show popup when hovering on button */
+.info-btn:hover + .info-popup {
+  display: block;
+}
+
+.service-options {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.service-option {
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+  background-color: red;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.service-option.active {
+  background-color: green;
+}
+</style>
+
+
+      <div class="log-field"><label> CUSTOMER'S NAME: <input type="text" id="customerName"></label></div>
+      <div class="log-field"><label> BADGE #: <input type="text" id="badgeNumber"></label></div>
+      <div class="log-field"><label> CID: <input type="text" id="cidNumber"></label></div>
+      <div class="log-field"><label> PLATE #: <input type="text" id="plateNumber"></label></div>
+      <div class="log-field"><label> EMPLOYEE'S NAME: <input type="text" id="employeeName"></label></div>
+      <div class="log-field"><label> PRICE: <input type="text" id="priceNumber"></label></div>
+      <div class="log-field"><label> DATE: <input type="date" id="serviceDate"></label></div>
+
+      <!-- Bigger gap only before button -->
+      <div style="margin-top: 12px;">
+        <button class="calc-btn" onclick="submitLogs()">ENTER</button>
+      </div>
+    </div>
+
+    <!-- Bigger gap only before output -->
+    <pre id="logsOutput" style="margin-top: 15px;"></pre>
+  </div>
+</div>
+<style>
+  /* Reduce spacing between fields */
+  .logs-section .log-field {
+    margin-bottom: 4px; /* tighter spacing */
+  }
+</style>
+  
   <script>
     // ===== calculator constants (unchanged) =====
   const reqPlasticSet = 150; 
@@ -410,8 +526,8 @@ Grand Total: 0.00</pre>
 
     const cosmeTotal = cosmeCount * 400;
     const resprayTotal = resprayCount * 1000;
-    const neonTotal = neonCount * 500;
-    const colorTotal = colorCount * 100;
+    const neonTotal = neonCount * 100;
+    const colorTotal = colorCount * 500;
     const plateTotal = plateCount * 1000;
 
     // cosmeticsTotal can now be a float if customValue has decimals
@@ -606,6 +722,68 @@ Grand Total: 0.00</pre>
         }
       });
     });
+    
+function toggleService(el) {
+  el.classList.toggle("active");
+}
+
+function submitLogs() {
+  // Collect active services
+  const services = Array.from(document.querySelectorAll(".service-option.active"))
+    .map(el => el.textContent)
+    .join(", ") || "None";
+
+  const customerName = document.getElementById("customerName").value;
+  const badgeNumber = document.getElementById("badgeNumber").value;
+  const cidNumber = document.getElementById("cidNumber").value;
+  const plateNumber = document.getElementById("plateNumber").value;
+  const employeeName = document.getElementById("employeeName").value;
+  const priceNumber = document.getElementById("priceNumber").value;
+  const serviceDate = document.getElementById("serviceDate").value;
+
+  // Build log entry (combine all parts properly)
+  const logEntry = 
+`SERVICES: ${services}
+CUSTOMER: ${customerName}
+BADGE #: ${badgeNumber}
+CID: ${cidNumber}
+PLATE #: ${plateNumber}
+EMPLOYEE: ${employeeName}
+PRICE: ${priceNumber}
+DATE: ${serviceDate}
+
+--------------------
+
+${services} | ${customerName} | ${badgeNumber} | ${cidNumber} | ${plateNumber} | ${employeeName} | ${priceNumber} | ${serviceDate}
+`;
+
+  document.getElementById("logsOutput").textContent = logEntry;
+}
+function showInfo() {
+  const popup = document.getElementById("infoPopup");
+  const text = (
+    " SERVICE CODES:\n\n" + 
+    " PMS: PREVENTIVE MAINTENANCE SERVICES\n" + 
+    " CSM: COSMETICS\n" + 
+    " UPS: UPGRADES"
+  );
+
+  // Set text with line breaks preserved
+  popup.textContent = text;
+
+  // Toggle visibility
+  popup.style.display = popup.style.display === "block" ? "none" : "block";
+}
+
+// Optional: close popup if clicked outside
+document.addEventListener("click", function(event) {
+  const popup = document.getElementById("infoPopup");
+  const button = document.querySelector(".info-btn");
+  if (popup.style.display === "block" && !popup.contains(event.target) && event.target !== button) {
+    popup.style.display = "none";
+  }
+});
+
   </script>
   <div class="footer">Credits: <b>PauTangFM</b></div>
 </body>
