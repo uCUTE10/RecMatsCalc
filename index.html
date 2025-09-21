@@ -828,9 +828,6 @@ document.addEventListener('contextmenu', function(e){
   e.preventDefault();
 });
 
-/* disable text selection & dragging - purely cosmetic */
-document.addEventListener('selectstart', function(e) { e.preventDefault(); });
-document.addEventListener('dragstart', function(e) { e.preventDefault(); });
 
 /* block common devtools / view-source keyboard shortcuts */
 document.addEventListener('keydown', function(e) {
@@ -904,4 +901,5 @@ function showDevWarning(){
   <div class="footer">Credits: <b>PauTangFM</b></div>
 </body>
 </html>
+
 
