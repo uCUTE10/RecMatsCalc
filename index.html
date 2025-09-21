@@ -373,6 +373,7 @@ UPS: UPGRADES
       <!-- Bigger gap only before button -->
       <div style="margin-top: 12px;">
         <button class="calc-btn" onclick="submitLogs()">ENTER</button>
+        <button class="clear" onclick="resetLogs()">Reset</button>
       </div>
     </div>
 
@@ -728,6 +729,24 @@ function toggleService(el) {
   el.classList.toggle("active");
 }
 
+function setPhilippinesDate() {
+    // Get current UTC time
+    const now = new Date();
+
+    // Convert to Philippines time (UTC+8)
+    const philTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+
+    // Format to yyyy-mm-dd (what <input type="date"> expects)
+    const year = philTime.getFullYear();
+    const month = String(philTime.getMonth() + 1).padStart(2, "0");
+    const day = String(philTime.getDate()).padStart(2, "0");
+
+    document.getElementById("serviceDate").value = `${year}-${month}-${day}`;
+  }
+
+  // Run on page load
+  setPhilippinesDate();
+
 function submitLogs() {
   // Collect active services
   const services = Array.from(document.querySelectorAll(".service-option.active"))
@@ -784,6 +803,102 @@ document.addEventListener("click", function(event) {
     popup.style.display = "none";
   }
 });
+
+function resetLogs() {
+    document.getElementById("customerName").value = "";
+    document.getElementById("badgeNumber").value = "";
+    document.getElementById("cidNumber").value = "";
+    document.getElementById("plateNumber").value = "";
+    document.getElementById("employeeName").value = "";
+    document.getElementById("priceNumber").value = "";
+    const now = new Date();
+  const philTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+
+  const year = philTime.getFullYear();
+  const month = String(philTime.getMonth() + 1).padStart(2, "0");
+  const day = String(philTime.getDate()).padStart(2, "0");
+
+  // Reset date to PH current date
+  document.getElementById("serviceDate").value = `${year}-${month}-${day}`;
+    
+  }
+
+  /* disable right-click context menu */
+document.addEventListener('contextmenu', function(e){
+  e.preventDefault();
+});
+
+/* disable text selection & dragging - purely cosmetic */
+document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+/* block common devtools / view-source keyboard shortcuts */
+document.addEventListener('keydown', function(e) {
+  // F12
+  if (e.key === 'F12') { e.preventDefault(); showDevWarning(); return; }
+
+  // Ctrl/Cmd + Shift + I / J / C  (open devtools)
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && 
+      (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j' || e.key.toLowerCase() === 'c')) {
+    e.preventDefault(); showDevWarning(); return;
+  }
+
+  // Ctrl/Cmd + U (view-source)
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+    e.preventDefault(); showDevWarning(); return;
+  }
+
+  // Ctrl + Shift + K (Firefox devtools), Ctrl+Shift+S sometimes
+  if (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'k' || e.key.toLowerCase() === 's')) {
+    e.preventDefault(); showDevWarning(); return;
+  }
+});
+
+/* small visual warning if user repeatedly tries keys */
+let devAttempts = 0;
+function showDevWarning(){
+  devAttempts++;
+  if (devAttempts < 3) return; // only show after a few attempts
+
+  if (!document.getElementById('__devWarning')) {
+    const div = document.createElement('div');
+    div.id = '__devWarning';
+    div.innerText = 'Inspecting the source is disabled on this page. If you need access, contact PauTangFM.';
+    Object.assign(div.style, {
+      position: 'fixed',
+      bottom: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: 'rgba(220,20,60,0.95)',
+      color: '#fff',
+      padding: '10px 16px',
+      borderRadius: '8px',
+      zIndex: 999999,
+      fontWeight: '600',
+      boxShadow: '0 6px 20px rgba(0,0,0,0.6)'
+    });
+    document.body.appendChild(div);
+    setTimeout(()=> div.remove(), 4000);
+  }
+  devAttempts = 0;
+}
+
+/* optional: detect if DevTools is open (heuristic) */
+/* NOTE: these checks are not reliable and can be noisy */
+(function detectDevTools() {
+  let opened = false;
+  const threshold = 160; // px; adjust
+  setInterval(function(){
+    const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+    const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+    if ((widthThreshold || heightThreshold) && !opened) {
+      opened = true;
+      showDevWarning();
+    } else if (!(widthThreshold || heightThreshold) && opened) {
+      opened = false;
+    }
+  }, 1000);
+})();
 
   </script>
   <div class="footer">Credits: <b>PauTangFM</b></div>
