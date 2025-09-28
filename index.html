@@ -283,7 +283,7 @@ Grand Total: 0.00</pre>
   </label>
   <div class="service-options">
     <div class="service-option" onclick="toggleService(this)">CSM</div>
-    <div class="service-option" onclick="toggleService(this)">FSM</div>
+    <div class="service-option" onclick="toggleService(this); addFSM();">FSM</div>
     <div class="service-option" onclick="toggleService(this)">UPS</div>
   </div>
 </div>
@@ -748,10 +748,23 @@ function setPhilippinesDate() {
   setPhilippinesDate();
 
 function submitLogs() {
-  // Collect active services
-  const services = Array.from(document.querySelectorAll(".service-option.active"))
-    .map(el => el.textContent)
-    .join(", ") || "None";
+  // Collect active services (toggle-based)
+  let servicesList = Array.from(document.querySelectorAll(".service-option.active"))
+    .map(el => el.textContent);
+
+  // Handle FSM separately: only include if fsmCount > 0
+  if (fsmCount > 0) {
+    // Remove plain "FSM" if it exists
+    servicesList = servicesList.filter(s => s !== "FSM");
+    // Add with quantity
+    servicesList.push(fsmCount + " FSM");
+  } else {
+    // Ensure FSM never shows up if count = 0
+    servicesList = servicesList.filter(s => s !== "FSM");
+  }
+
+  // Join services with " | "
+  const services = servicesList.length ? servicesList.join(" | ") : "None";
 
   const customerName = document.getElementById("customerName").value;
   const badgeNumber = document.getElementById("badgeNumber").value;
@@ -761,7 +774,7 @@ function submitLogs() {
   const priceNumber = document.getElementById("priceNumber").value;
   const serviceDate = document.getElementById("serviceDate").value;
 
-  // Build log entry (combine all parts properly)
+  // Build log entry
   const logEntry = 
 `SERVICES: ${services}
 CUSTOMER: ${customerName}
@@ -811,6 +824,7 @@ function resetLogs() {
     document.getElementById("plateNumber").value = "";
     //document.getElementById("employeeName").value = "";
     document.getElementById("priceNumber").value = "";
+    document.querySelectorAll('.service-option').forEach(el => el.classList.remove('active'));
     const now = new Date();
   const philTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Manila" }));
 
@@ -897,11 +911,22 @@ function showDevWarning(){
   }, 1000);
 })();
 
+let fsmCount = 0; // track FSM quantity
+
+function addFSM() {
+  const qty = parseInt(prompt("Enter FSM quantity (1–10):"), 10);
+  if (!isNaN(qty) && qty >= 1 && qty <= 10) {
+    fsmCount = qty;
+  } else {
+    alert("Please enter a number between 1 and 10.");
+  }
+  updateGrandTotal();
+}
+
   </script>
   <div class="footer">Credits: <b>PauTangFM</b></div>
 </body>
 </html>
-
 
 
 
