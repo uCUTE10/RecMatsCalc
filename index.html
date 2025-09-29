@@ -283,7 +283,7 @@ Grand Total: 0.00</pre>
   </label>
   <div class="service-options">
     <div class="service-option" onclick="toggleService(this)">CSM</div>
-    <div class="service-option" onclick="toggleService(this); addFSM();">FSM</div>
+    <div class="service-option fsm" id="fsmBtn" onclick="toggleService(this); addFSM();">FSM</div>
     <div class="service-option" onclick="toggleService(this)">UPS</div>
   </div>
 </div>
@@ -386,6 +386,14 @@ UPS: UPGRADES
   .logs-section .log-field {
     margin-bottom: 4px; /* tighter spacing */
   }
+
+.service-option.fsm {
+  background: red;
+  color: white;
+  cursor: pointer;
+}
+
+
 </style>
   
   <script>
@@ -824,20 +832,12 @@ function resetLogs() {
   document.getElementById("plateNumber").value = "";
   //document.getElementById("employeeName").value = "";
   document.getElementById("priceNumber").value = "";
-
-  // Reset all selected services (toggle highlight)
   document.querySelectorAll('.service-option').forEach(el => el.classList.remove('active'));
 
-  // Reset FSM count
+  // reset FSM count and set back to red (ready)
   fsmCount = 0;
+  document.getElementById("fsmBtn").style.background = "red";
 
-  // Clear logs output (so services section goes blank instead of showing "None")
-  document.getElementById("logsOutput").textContent = "";
-
-  // Reset grand total panel (if you want it blank instead of showing 0)
-  document.getElementById("grandResult").innerText = "";
-
-  // Reset date to PH current date
   const now = new Date();
   const philTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Manila" }));
 
@@ -846,6 +846,9 @@ function resetLogs() {
   const day = String(philTime.getDate()).padStart(2, "0");
 
   document.getElementById("serviceDate").value = `${year}-${month}-${day}`;
+
+  // clear services display
+  document.getElementById("servicesOutput").innerText = "";
 }
 
   /* disable right-click context menu */
@@ -922,15 +925,20 @@ function showDevWarning(){
   }, 1000);
 })();
 
-let fsmCount = 0; // track FSM quantity
+let fsmCount = 0;
 
 function addFSM() {
   const qty = parseInt(prompt("Enter FSM quantity (1–10):"), 10);
+
   if (!isNaN(qty) && qty >= 1 && qty <= 10) {
     fsmCount = qty;
+    document.getElementById("fsmBtn").style.background = "green"; // valid = green
   } else {
     alert("Please enter a number between 1 and 10.");
+    fsmCount = 0;
+    document.getElementById("fsmBtn").style.background = "red";   // invalid = reset back to red
   }
+
   updateGrandTotal();
 }
 
@@ -938,7 +946,6 @@ function addFSM() {
   <div class="footer">Credits: <b>PauTangFM</b></div>
 </body>
 </html>
-
 
 
 
